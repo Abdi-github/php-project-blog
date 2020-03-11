@@ -1,7 +1,7 @@
 <?php
 
 $title = "About " . $appName;
-$description = "Application used to creating, updating, adding and deleting social posts.";
+
 
     require('partials/header.php')
 ?>
@@ -9,7 +9,7 @@ $description = "Application used to creating, updating, adding and deleting soci
 
 <div class="jubmotron jombotron-flud">
 <div class="container">
-    <h1 class="display-3"><?php echo htmlentities($title); ?></h1>
+    <h1 class="display-3"><?php echo ($title); ?></h1>
     <p class="lead"><?php echo $description; ?></p>
 </div>
 </div>

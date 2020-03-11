@@ -28,5 +28,11 @@ class Helper
                         // voir: http://php.net/manual/fr/function.extract.
                         // voir aussi la méthode compact()
         return require "app/views/{$name}.view.php";
+
+
+
+
+
+
     }
 }
