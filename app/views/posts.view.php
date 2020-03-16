@@ -14,7 +14,13 @@ require('partials/header.php');
         </a>
     </div>
 </div>
+<?php foreach ($posts as $p) {
+    //echo $article->asHTMLTableRow();
+    echo $p->asHTML();
+}?>
 
+
+<!--
 <?php foreach($posts as $p) : ?>
     <div class="card card-body mb-3">
         <h4 class="card-title"><?php echo $p->title; ?></h4>
@@ -26,7 +32,7 @@ require('partials/header.php');
 
     </div>
 <?php endforeach; ?>
-
+-->
 
 
 <?php
