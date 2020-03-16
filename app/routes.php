@@ -7,6 +7,8 @@ $router->define([
   'about' => 'AboutController',
   'posts' => 'PostsController',
   'addPost' => 'PostsController@addPost',
+  'post' => 'PostsController@showPost',
+  'editPost' => 'PostsController@editPost'
   /*
   'index' => 'IndexController',
   'about' => 'AboutController',
