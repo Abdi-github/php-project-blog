@@ -1,12 +1,14 @@
 <?php
 
-class Post {
+class Post
+{
 
     private $id;
     private $user_id;
     private $title;
     private $content;
     private $created_at;
+    private $user_name;
 
     // Getters and Setters
 
@@ -90,37 +92,54 @@ class Post {
         $dbh = App::get('dbh');
 
         // prepared statement with named placeholders
-        $statement = $dbh->prepare("SELECT * FROM posts WHERE id = ?");
+        $statement = $dbh->prepare("SELECT *,
+                                    posts.created_at as postCreatedAt,
+                                    posts.id as postId
+                                    FROM posts
+                                    WHERE id = ?");
         $statement->setFetchMode(PDO::FETCH_CLASS, 'Post');
         $statement->execute([$id]);
         return $statement->fetch();
     }
+/*
+public static function getPosts()
+{
+$dbh = App::get('dbh');
+$statement = $dbh->prepare("SELECT * FROM posts");
+$statement->execute();
+return $statement->fetchAll(PDO::FETCH_CLASS, 'Post');
 
-
-
-
-
-
-    public static function getPosts(){
+}
+ */
+    public static function getPosts()
+    {
         $dbh = App::get('dbh');
-        $statement = $dbh->prepare("SELECT * FROM posts");
+        $statement = $dbh->prepare("SELECT *,
+                                    posts.created_at as postCreatedAt,
+                                    users.created_at as userCreatedAt,
+                                    posts.id as postId,
+                                    users.id as userId
+                                    FROM posts
+                                    JOIN users ON posts.user_id = users.id
+                                    ORDER BY posts.created_at DESC
+                                    ");
         $statement->execute();
         return $statement->fetchAll(PDO::FETCH_CLASS, 'Post');
 
     }
 
-    public static function addPost($title, $content){
+    public static function addPost($title, $content)
+    {
         $dbh = App::get('dbh');
-        $statement = $dbh->prepare("insert into posts ( title, content) VALUES (:title, :content)");
+        $statement = $dbh->prepare("insert into posts ( title, content, user_id) VALUES (:title, :content, :user_id)");
         $statement->execute([
-            'title'   => $title,
-            'content'    => $content]);
+            'title' => $title,
+            'content' => $content,
+            'user_id' => $_SESSION['user_id']]);
     }
 
-
-
-
-    public function asHTML() {
+    public function asHTML()
+    {
         $str = "";
 
         $str .= "<div class=\"card card-body mb-3\">\n";
@@ -131,7 +150,7 @@ class Post {
 
         $str .= "<div class=\"bg-light p-2 mb-3\">";
         $str .= "Written By: ";
-        $str .= urlencode($this->user_id) . 'on ' . htmlentities($this->created_at) ;
+        $str .= urlencode($this->user_name/*$this->user_id*/) . ' on ' . htmlentities($this->postCreatedAt);
 
         $str .= "</div>";
 
@@ -140,35 +159,48 @@ class Post {
         $str .= "</p>";
 
         $str .= "<span class=\"btn btn-dark\">";
-        $str .= "<a href=\"/php_project/post?id=" . urlencode($this->id) . "\"> More </a>";
+        $str .= "<a href=\"/php_project/post?id=" . urlencode($this->postId) . "\"> More </a>";
         $str .= "</span>";
-
 
         $str .= "</div>\n";
 
-
-
-
         return $str;
-
-
-
 
     }
 
+    public function asHTML_edit()
+    {
+        $str = "";
 
+        $str .= "<div class=\"card card-body mb-3\">\n";
 
+        $str .= "<h4 class=\"card-title\">\n";
+        $str .= htmlentities($this->title);
+        $str .= "</h4>";
 
+        $str .= "<div class=\"bg-light p-2 mb-3\">";
+        $str .= "Written By: ";
+        $str .= urlencode($this->user_name/*$this->user_id*/) . ' on ' . htmlentities($this->postCreatedAt);
 
+        $str .= "</div>";
 
+        $str .= "<p class=\"card-text\">";
+        $str .= htmlentities($this->content);
+        $str .= "</p>";
 
+        $str .= "</div>\n";
 
+        if ($this->user_id == $_SESSION['user_id']) {
+            $str .= "<a href=\"/php_project/editPost?id=" . urlencode($this->postId) . "\" class=\"btn btn-dark\" >Edit</a>";
 
+            $str .= "<form class=\"pull-right\" action = \"/php_project/deletePost?id=" . urlencode($this->postId) . "\"  method = \"post\"> ";
+            $str .= "<input class=\"btn btn-danger\" type =\"submit\" value =\"Delete\" >";
+            $str .= "</form>";
 
+        }
 
+        return $str;
 
-
-
-
+    }
 
 }

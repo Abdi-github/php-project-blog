@@ -1,6 +1,6 @@
 <?php
 
-require('partials/header.php')
+require 'partials/header.php'
 ?>
 
 
@@ -8,15 +8,18 @@ require('partials/header.php')
 
     <h2>Edit Post</h2>
     <p>Please create your post with this form.</p>
-    <form action="addPost" method="post">
+
+
+
+    <form action="updatePost" method="post">
         <div class="form-group">
             <label for="title">Title: <sup>*</sup></label>
-            <input type="text" name="title" class="form-control form-control-lg <?php echo (!empty($data['title_err'])) ? 'is-invalid' : ''; ?>" value="<?php echo $data['title']; ?>">
+            <input type="text" name="title" class="form-control form-control-lg <?php echo (!empty($data['title_err'])) ? 'is-invalid' : ''; ?>" value="<?php echo $currentPost->getTitle(); ?>">
             <span class="invalid-feedback"><?php echo $data['title_err']; ?></span>
         </div>
         <div class="form-group">
             <label for="content">Content: <sup>*</sup></label>
-            <textarea name="content" class="form-control form-control-lg <?php echo (!empty($data['content_err'])) ? 'is-invalid' : ''; ?>" ><?php echo $data['content']; ?></textarea>
+            <textarea name="content" class="form-control form-control-lg <?php echo (!empty($data['content_err'])) ? 'is-invalid' : ''; ?>" ><?php echo $currentPost->getContent() /*$data['content']*/; ?></textarea>
             <span class="invalid-feedback"><?php echo $data['content_err']; ?></span>
 
 
@@ -29,7 +32,7 @@ require('partials/header.php')
 
 
 <?php
-require('partials/footer.php')
+require 'partials/footer.php'
 
 ?>
 

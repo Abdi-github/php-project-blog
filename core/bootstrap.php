@@ -5,6 +5,7 @@ require 'core/Request.php';
 require 'core/App.php';
 require 'core/database/Connection.php';
 require 'helpers/Helper.php';
+require 'helpers/session_helper.php';
 
 App::load_config("config.php");
 

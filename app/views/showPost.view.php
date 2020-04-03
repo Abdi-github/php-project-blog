@@ -1,6 +1,6 @@
 <?php
 
-require('partials/header.php');
+require 'partials/header.php';
 
 ?>
 <a href="/php_project/posts" class="btn btn-light"><i class="fa fa-backward"></i> Back</a>
@@ -19,15 +19,11 @@ require('partials/header.php');
 
 
 <?php
- echo $post->asHTML();
+echo $post->asHTML_edit();
 ?>
 
-
-
-
-
 <?php
-require('partials/footer.php')
+require 'partials/footer.php'
 
 ?>
 
