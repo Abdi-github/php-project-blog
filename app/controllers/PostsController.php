@@ -96,7 +96,7 @@ class PostsController
 
             if ($post == null) {
                 // raising an exception maybe not the best solution
-                throw new Exception("ARTICLE NOT FOUND.", 1);
+                throw new Exception("POST NOT FOUND.", 1);
             }
         } else {
             throw new Exception("POST NOT FOUND.", 1);
@@ -105,6 +105,19 @@ class PostsController
         return Helper::view("editPost", [
             'currentPost' => $post,
         ]);
+
+    }
+
+    public function deletePost()
+    {
+        if (isset($_GET["id"]) && ctype_digit($_GET["id"])) {
+            $post = Post::fetchById($_GET["id"]);
+            $post->deletePost($_GET['id']);
+        } else {
+            throw new Exception("POST NOT FOUND.", 1);
+        }
+
+        Helper::redirect('posts');
 
     }
 

@@ -137,6 +137,13 @@ return $statement->fetchAll(PDO::FETCH_CLASS, 'Post');
             'content' => $content,
             'user_id' => $_SESSION['user_id']]);
     }
+    public static function deletePost($id)
+    {
+        $dbh = App::get('dbh');
+        $statement = $dbh->prepare("delete from posts where id=:postId");
+        $statement->execute(['postId' => $id]);
+
+    }
 
     public function asHTML()
     {
@@ -191,9 +198,9 @@ return $statement->fetchAll(PDO::FETCH_CLASS, 'Post');
         $str .= "</div>\n";
 
         if ($this->user_id == $_SESSION['user_id']) {
-            $str .= "<a href=\"/php_project/editPost?id=" . urlencode($this->postId) . "\" class=\"btn btn-dark\" >Edit</a>";
+            $str .= "<a href=\"/php_project/editPost?id=" . urlencode($this->id) . "\" class=\"btn btn-dark\" >Edit</a>";
 
-            $str .= "<form class=\"pull-right\" action = \"/php_project/deletePost?id=" . urlencode($this->postId) . "\"  method = \"post\"> ";
+            $str .= "<form class=\"pull-right\" action = \"/php_project/deletePost?id=" . urlencode($this->id) . "\"  method = \"post\"> ";
             $str .= "<input class=\"btn btn-danger\" type =\"submit\" value =\"Delete\" >";
             $str .= "</form>";
 
