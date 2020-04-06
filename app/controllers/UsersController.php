@@ -8,7 +8,10 @@ class UsersController
     public function register()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-// Process Form
+            /**
+             * Process Form
+             */
+
             // Sanitize the form
 
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -188,15 +191,6 @@ class UsersController
         session_destroy();
         Helper::redirect('login');
 
-    }
-    public function isLoggedIn()
-    {
-        if (isset($_SESSION['user_id'])) {
-            return true;
-        } else {
-            return false;
-
-        }
     }
 
 }

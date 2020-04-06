@@ -1,7 +1,7 @@
 <?php
-    $title = "Home";
-    $description = "Application used to creating, updating, adding and deleting social posts.";
-    require('partials/header.php')
+$title = "Home";
+$description = "Application used to creating, updating, adding and deleting social posts.";
+require 'partials/header.php'
 ?>
 
 
@@ -12,10 +12,6 @@
     </div>
 </div>
 
-<!--
-<p>
-     Nothing to do here go to <a href="tasks">Task</a>
-</p>
--->
 
-<?php require('partials/footer.php') ?>
+
+<?php require 'partials/footer.php'?>

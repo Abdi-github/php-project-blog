@@ -8,7 +8,6 @@ class Post
     private $title;
     private $content;
     private $created_at;
-    private $user_name;
 
     // Getters and Setters
 
@@ -86,8 +85,6 @@ class Post
 
     public static function fetchById($id)
     {
-        // ASSUMPTION
-        //    - $id was validated by the caller
 
         $dbh = App::get('dbh');
 
@@ -101,19 +98,14 @@ class Post
         $statement->execute([$id]);
         return $statement->fetch();
     }
-/*
-public static function getPosts()
-{
-$dbh = App::get('dbh');
-$statement = $dbh->prepare("SELECT * FROM posts");
-$statement->execute();
-return $statement->fetchAll(PDO::FETCH_CLASS, 'Post');
 
-}
- */
     public static function getPosts()
     {
         $dbh = App::get('dbh');
+        /**
+         * Joining users and posts table so the we can access user_name  from the
+         * users table
+         */
         $statement = $dbh->prepare("SELECT *,
                                     posts.created_at as postCreatedAt,
                                     users.created_at as userCreatedAt,
@@ -137,6 +129,20 @@ return $statement->fetchAll(PDO::FETCH_CLASS, 'Post');
             'content' => $content,
             'user_id' => $_SESSION['user_id']]);
     }
+
+    public static function updatePost($title, $content, $id)
+    {
+        $dbh = App::get('dbh');
+        $statement = $dbh->prepare('UPDATE posts SET title = :title, content = :content WHERE id = :postId');
+
+        $statement->execute([
+            'postId' => $id,
+            'title' => $title,
+            'content' => $content,
+        ]);
+
+    }
+
     public static function deletePost($id)
     {
         $dbh = App::get('dbh');
@@ -175,7 +181,7 @@ return $statement->fetchAll(PDO::FETCH_CLASS, 'Post');
 
     }
 
-    public function asHTML_edit()
+    public function asHTML_show_post()
     {
         $str = "";
 
@@ -187,7 +193,7 @@ return $statement->fetchAll(PDO::FETCH_CLASS, 'Post');
 
         $str .= "<div class=\"bg-light p-2 mb-3\">";
         $str .= "Written By: ";
-        $str .= urlencode($this->user_name/*$this->user_id*/) . ' on ' . htmlentities($this->postCreatedAt);
+        $str .= urlencode($this->user_id) . ' on ' . htmlentities($this->postCreatedAt);
 
         $str .= "</div>";
 
@@ -198,9 +204,9 @@ return $statement->fetchAll(PDO::FETCH_CLASS, 'Post');
         $str .= "</div>\n";
 
         if ($this->user_id == $_SESSION['user_id']) {
-            $str .= "<a href=\"/php_project/editPost?id=" . urlencode($this->id) . "\" class=\"btn btn-dark\" >Edit</a>";
+            $str .= "<a href=\"/php_project/updatePost?id=" . urlencode($this->id) . "\" class=\"btn btn-dark\" >Edit</a>";
 
-            $str .= "<form class=\"pull-right\" action = \"/php_project/deletePost?id=" . urlencode($this->id) . "\"  method = \"post\"> ";
+            $str .= "<form class=\"pull-right\" action = \"/php_project/deletePost?id=" . urlencode($this->postId) . "\"  method = \"post\"> ";
             $str .= "<input class=\"btn btn-danger\" type =\"submit\" value =\"Delete\" >";
             $str .= "</form>";
 

@@ -2,7 +2,10 @@
 
 session_start();
 
-// Flash Message helper
+/*
+ * Flash message helper to flash messages when the user perform actions like
+ * adding , updating and deleting post
+ */
 
 function flash($name = '', $message = '', $class = 'alert alert-success')
 {

@@ -19,12 +19,11 @@ require 'partials/header.php';
 
 
 <?php
-echo $post->asHTML_edit();
+echo $post->asHTML_show_post();
+
 ?>
 
 <?php
 require 'partials/footer.php'
 
 ?>
-
-

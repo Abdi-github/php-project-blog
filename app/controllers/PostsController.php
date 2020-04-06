@@ -6,6 +6,9 @@ class PostsController
 {
     public function __construct()
     {
+        /**
+         * Redirecting users to login page if they are not logged in
+         */
 
         if (!isLoggedIn()) {
             Helper::redirect('login');
@@ -65,11 +68,12 @@ class PostsController
                 $data['title_err'] = 'The title can not be longer than 255  characters';
             }
 
-            // Make sure no errors
+            // Making sure no errors
             if (empty($data['title_err']) && empty($data['content_err'])) {
                 // Validated
                 if ((isset($_POST['title'])) & (isset($_POST['content']))) {
                     Post::addPost($_POST['title'], $_POST['content'], $_SESSION['user_id']);
+                    flash('add_message', 'Post successfully added');
                     Helper::redirect('posts');
                 } else {
                     die('Something went wrong');
@@ -89,22 +93,63 @@ class PostsController
         }
     }
 
-    public function editPost()
+    public function updatePost()
     {
-        if (isset($_GET["id"]) && ctype_digit($_GET["id"])) {
-            $post = Post::fetchById($_GET["id"]);
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
-            if ($post == null) {
-                // raising an exception maybe not the best solution
-                throw new Exception("POST NOT FOUND.", 1);
+            $currentPost = [
+                'id' => $_POST['id'],
+                'title' => trim($_POST['title']),
+                'content' => trim($_POST['content']),
+                'user_id' => $_SESSION['user_id'],
+                'title_err' => '',
+                'content_err' => '',
+            ];
+
+            // Validate data
+            if (empty($currentPost['title'])) {
+                $currentPost['title_err'] = 'Please enter title';
+
             }
-        } else {
-            throw new Exception("POST NOT FOUND.", 1);
-        }
+            if (empty($currentPost['content'])) {
+                $currentPost['content_err'] = 'Please enter content text';
+            }
+            if (strlen($currentPost['title']) > 255) {
 
-        return Helper::view("editPost", [
-            'currentPost' => $post,
-        ]);
+                $currentPost['title_err'] = 'The title can not be longer than 255  characters';
+            }
+
+            // Making sure no errors
+
+            if (empty($currentPost['title_err']) && empty($currentPost['content_err'])) {
+                if ((isset($_POST['title'])) & (isset($_POST['content']))) {
+                    Post::updatePost($_POST['title'], $_POST['content'], $_POST['postId']);
+                    // die('ok');
+                    flash('update_message', 'You have updated your post');
+                    Helper::redirect('posts');
+                } else {
+                    die('Something went wrong');
+
+                }
+
+            } else {
+                Helper::view('editPost', $currentPost);
+            }
+
+        } else {
+            $currentPost = Post::fetchById($_GET["id"]);
+
+            $data = [
+                'id' => $currentPost->getId(),
+                'title' => $currentPost->getTitle(),
+                'content' => $currentPost->getContent(),
+            ];
+
+            return Helper::view("editPost", [
+                'data' => $data,
+            ]);
+        }
 
     }
 
@@ -116,9 +161,8 @@ class PostsController
         } else {
             throw new Exception("POST NOT FOUND.", 1);
         }
-
+        flash('delete_message', 'You have deleted your post');
         Helper::redirect('posts');
 
     }
-
 }

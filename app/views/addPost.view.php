@@ -1,6 +1,6 @@
 <?php
 
-require('partials/header.php')
+require 'partials/header.php'
 ?>
 
 <a href="/php_project/posts" class="btn btn-light"><i class="fa fa-backward"></i> Back</a>
@@ -19,8 +19,6 @@ require('partials/header.php')
                     <label for="content">Content: <sup>*</sup></label>
                     <textarea name="content" class="form-control form-control-lg <?php echo (!empty($data['content_err'])) ? 'is-invalid' : ''; ?>" ><?php echo $data['content']; ?></textarea>
                     <span class="invalid-feedback"><?php echo $data['content_err']; ?></span>
-
-
                 </div>
                 <input type="submit" class="btn btn-success" value="Submit" name="Submit">
             </form>
@@ -30,7 +28,7 @@ require('partials/header.php')
 
 
 <?php
-require('partials/footer.php')
+require 'partials/footer.php'
 
 ?>
 
